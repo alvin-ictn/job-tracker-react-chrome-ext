@@ -1,9 +1,9 @@
-export function addAppliedBadge() {
+export function addAppliedBadge(message:string) {
   if (document.querySelector("#job-tracker-applied-banner")) return;
 
   const banner = document.createElement("div");
   banner.id = "job-tracker-applied-banner";
-  banner.textContent = "Tracked\nby JobTracker";
+  banner.textContent = message?? "Tracked\nby JobTracker";
   banner.style.cssText = `
     white-space: pre-line;
     position: fixed;

@@ -1,22 +1,10 @@
-function parseJobPostingLever(text: string) {
-  const lines = text.trim().split("\n");
-  const job_position = lines[0].trim();
-
-  // Extract parts from the second line
-  const secondLine = lines[1] || "";
-  const [locationAndDept, ...rest] = secondLine.split("/");
-  const [locationRaw, departmentRaw] = locationAndDept.split(/(?=[A-Z])/); // split before capital letter
-
-  const location = locationRaw?.trim() || null;
-
-  // department may include dashes or spaces
-  const department = departmentRaw
-    ? departmentRaw.replace(/–|-/g, "").trim()
-    : null;
-
-  const employment_type = rest[0]?.trim() || null;
-  const location_type = rest[1]?.trim() || null;
-
+function parseJobPostingLever(element: HTMLElement) {
+  const job_position = element.children?.[0]?.innerHTML;
+  const location = element.querySelector("[class*='location']")?.innerHTML?.trim() || null;
+  const department = element.querySelector("[class*='department']")?.innerHTML?.trim() || null;
+  const location_type =  element.querySelector("[class*='workplaceTypes']")?.innerHTML?.trim() || null;
+  const employment_type = element.querySelector("[class*='commitment']")?.innerHTML?.trim() || null;
+  
   return {
     job_position,
     department,
@@ -28,12 +16,7 @@ function parseJobPostingLever(text: string) {
 
 export default function extractLeverJobData() {
   const postingHead =
-    (document.querySelector("[class*='posting-head']") as HTMLElement)
-      ?.innerText ||
-    document.querySelector("h2")?.textContent ||
-    document.querySelector(".posting-headline h2")?.textContent ||
-    "Unknown Title";
-
+    (document.querySelector("[class*='posting-head']") as HTMLElement);
   const { job_position, department, employment_type, location_type, location } =
     parseJobPostingLever(postingHead);
 

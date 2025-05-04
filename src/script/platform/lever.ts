@@ -1,9 +1,9 @@
 function parseJobPostingLever(element: HTMLElement) {
-  const job_position = element.children?.[0]?.innerHTML;
-  const location = element.querySelector("[class*='location']")?.innerHTML?.trim() || null;
-  const department = element.querySelector("[class*='department']")?.innerHTML?.trim() || null;
-  const location_type =  element.querySelector("[class*='workplaceTypes']")?.innerHTML?.trim() || null;
-  const employment_type = element.querySelector("[class*='commitment']")?.innerHTML?.trim() || null;
+  const job_position = element.children?.[0]?.innerHTML?.replace?.(" /","");
+  const location = element.querySelector("[class*='location']")?.innerHTML?.replace?.(" /","")?.trim() || null;
+  const department = element.querySelector("[class*='department']")?.innerHTML?.replace?.(" /","")?.trim() || null;
+  const location_type =  element.querySelector("[class*='workplaceTypes']")?.innerHTML?.replace?.(" /","")?.trim() || null;
+  const employment_type = element.querySelector("[class*='commitment']")?.innerHTML?.replace?.(" /","")?.trim() || null;
   
   return {
     job_position,

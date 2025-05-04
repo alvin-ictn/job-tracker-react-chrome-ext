@@ -1,14 +1,14 @@
 {
   "name": "job-tracker-extension",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "version": "sync-version manifest.json",
+    "version": "sync-version public/manifest.json",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -28,12 +28,14 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "postcss": "^8.5.3",
     "semantic-release": "^24.2.3",
+    "semantic-release-chrome": "^3.2.0",
     "sync-version": "^1.0.1",
     "tailwindcss": "^4.1.5",
     "typescript": "~5.7.2",

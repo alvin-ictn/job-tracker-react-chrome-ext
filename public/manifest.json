@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Job Tracker Extension",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://*.lever.co/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://*.lever.co/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

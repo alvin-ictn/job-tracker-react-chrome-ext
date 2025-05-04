@@ -41,7 +41,7 @@ export default function extractLeverJobData() {
     document.querySelector(".company-name")?.textContent ||
     window.location.hostname;
 
-  const jobUrl = window.location.href;
+  const jobUrl = window.location.href.replace("/apply","");
 
   return {
     company_name: company.trim(),

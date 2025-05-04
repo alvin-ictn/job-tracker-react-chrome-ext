@@ -1,21 +1,29 @@
 export function addAppliedBadge() {
-    if (document.querySelector("#job-tracker-applied-banner")) return;
+  if (document.querySelector("#job-tracker-applied-banner")) return;
 
-    const banner = document.createElement("div");
-    banner.id = "job-tracker-applied-banner";
-    banner.textContent = "✅ You have already applied for this job";
-    banner.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: green;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        font-size: 16px;
-        z-index: 9999;
+  const banner = document.createElement("div");
+  banner.id = "job-tracker-applied-banner";
+  banner.textContent = "Tracked\nby JobTracker";
+  banner.style.cssText = `
+    white-space: pre-line;
+    position: fixed;
+    padding: 5px 100px;
+    min-width: 300px;
+    transform: rotate(45deg) translate(37%, 0);
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    top: -91px;
+    box-sizing: border-box;
+    z-index: 1999;
+    right: -44px;
+    height: 73px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    background-color: green;
     `;
 
-    document.body.appendChild(banner);
+  document.body.appendChild(banner);
 }

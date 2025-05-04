@@ -2,34 +2,41 @@ import { addAppliedBadge } from "./applied-badge";
 import extractLeverJobData from "./platform/lever";
 
 const storageKey = "job_applications";
-document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.local.get([storageKey], (result) => {
-        const existing = result[storageKey] || [];
-        const currentUrl = window.location.href;
-    
-        const alreadySaved = existing.some((job: {url: string}) => job.url === currentUrl);
-    
-        if (alreadySaved) {
-            addAppliedBadge();
-        }
-    });
-    
+chrome.storage.local.get([storageKey], (result) => {
+  const existing = result[storageKey] || [];
+  const currentUrl = window.location.href;
+  const alreadySaved = existing.some((job: { job_url: string }) =>
+    currentUrl.includes(job.job_url)
+  );
+
+  if (alreadySaved) {
+    addAppliedBadge();
+  }
 });
+// document.addEventListener('DOMContentLoaded', () => {
+//     chrome.storage.local.get([storageKey], (result) => {
+//         const existing = result[storageKey] || [];
+//         const currentUrl = window.location.href;
+
+//         const alreadySaved = existing.some((job: {url: string}) => job.url === currentUrl);
+
+//         if (alreadySaved) {
+//             addAppliedBadge();
+//         }
+//     });
+
+// });
 
 // Listen to clicks
 document.addEventListener("click", (event) => {
-  console.log("event", event);
   const target = event.target as HTMLElement;
 
-  console.log("event", event);
   if (
     target &&
     target.textContent?.toLowerCase().includes("submit application")
   ) {
-    console.log("📝 Detected application submission");
 
     const jobData = extractLeverJobData();
-    console.log("Job data extracted:", jobData);
 
     chrome.storage.local.get([storageKey], (result) => {
       const existing = result[storageKey] || [];

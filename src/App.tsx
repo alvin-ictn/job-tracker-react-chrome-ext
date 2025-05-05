@@ -1,5 +1,7 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import MainLayout from "./layout";
 import { supabase } from "./lib/supabase-client";
+import { useDraftJobsStore } from "./store/use-draft-job-store";
 import { useJobStore } from "./store/use-job-store";
 
 const storageKey = "job_applications";
@@ -14,8 +16,9 @@ export default function App() {
   const fetchJobs = useJobStore((state) => state.fetchJobs);
   const clearJobs = useJobStore((state) => state.clearJobs);
   const [jobss, setJobs] = useState([]);
-
-  // Check session on load
+  const {jobs: draftJobs, addJob} = useDraftJobsStore();
+  
+  console.log("TEST", draftJobs)
   useEffect(() => {
     async function checkSession() {
       const {
@@ -30,14 +33,13 @@ export default function App() {
     checkSession();
   }, [fetchJobs]);
 
-  
   useEffect(() => {
     chrome?.storage?.local?.get?.([storageKey], (result) => {
       const savedJobs = result[storageKey] || [];
       setJobs(savedJobs);
+      addJob(savedJobs)
     });
 
-    // Optional: listen for changes (if content script adds new job)
     const handleChange = (
       changes: { [key: string]: chrome.storage.StorageChange },
       areaName: string
@@ -45,6 +47,8 @@ export default function App() {
       if (areaName === "local" && changes[storageKey]) {
         const newValue = changes[storageKey].newValue || [];
         setJobs(newValue);
+        addJob(newValue)
+        
       }
     };
 
@@ -52,8 +56,7 @@ export default function App() {
 
     // Cleanup listener on unmount
     return () => chrome.storage.onChanged.removeListener(handleChange);
-  }, []);
-
+  }, [addJob]);
 
   const handleLogin = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -80,7 +83,7 @@ export default function App() {
   if (loading) return <p className="p-4">Loading...</p>;
 
   return (
-    <Fragment 
+    <MainLayout
     // className="p-4 w-[300px] font-sans text-gray-800"
     >
       <h2 className="text-xl font-bold mb-4">Job Tracker Extension</h2>
@@ -121,7 +124,6 @@ export default function App() {
           >
             Log Out
           </button>
-
           <h3 className="text-lg font-semibold mb-2">Saved Applications</h3>
           LOLO
           {JSON.stringify(jobss)}
@@ -146,6 +148,6 @@ export default function App() {
           )}
         </>
       )}
-    </Fragment>
+    </MainLayout>
   );
 }

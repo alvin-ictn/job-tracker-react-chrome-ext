@@ -34,7 +34,8 @@ export default function extractLeverJobData() {
     p_location_type: location_type?.trim(),
     p_job_location: location?.trim(),
     applied_date: new Date().toISOString(),
-    job_url: jobUrl,
+    p_job_url: jobUrl,
+    p_applied_from: "lever",
     p_from_extension: true,
   };
 }

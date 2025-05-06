@@ -9,6 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "version": "sync-version public/manifest.json",
+    "zip": "powershell Compress-Archive -Path dist\\* -DestinationPath release/job-tracker-extension.zip",
+    "crx": "npx crx dist pack -o release/job-tracker-extension.crx -p my-private-key.pem",
+    "package": "npm run zip && npm run crx",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.2",
     "@types/chrome": "^0.0.318",
@@ -30,6 +34,8 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
     "conventional-changelog-conventionalcommits": "^8.0.0",
+    "cross-zip": "^3.1.0",
+    "crx": "^5.0.1",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",

@@ -16,8 +16,8 @@ module.exports = {
       "@semantic-release/github",
       {
         assets: [
-          "job-tracker-extension.zip",
-          "job-tracker-extension.crx"
+          "release/job-tracker-extension.zip",
+          "release/job-tracker-extension.crx"
         ]
       }
     ],

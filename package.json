@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "version": "sync-version public/manifest.json",
     "zip": "powershell Compress-Archive -Path dist\\* -DestinationPath release/job-tracker-extension.zip",
-    "crx": "npx crx dist pack -o release/job-tracker-extension.crx -p my-private-key.pem",
+    "crx": "npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
     "package": "npm run zip && npm run crx",
     "release": "semantic-release"
   },

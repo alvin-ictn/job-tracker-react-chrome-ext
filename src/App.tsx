@@ -3,6 +3,8 @@ import MainLayout from "./layout";
 import { supabase } from "./lib/supabase-client";
 import { useDraftJobsStore } from "./store/use-draft-job-store";
 import { useJobStore } from "./store/use-job-store";
+import { usePopupStore } from "./store/use-popup-store";
+import DraftJob from "./features/draft";
 
 const storageKey = "job_applications";
 
@@ -15,10 +17,12 @@ export default function App() {
   const jobs = useJobStore((state) => state.jobs);
   const fetchJobs = useJobStore((state) => state.fetchJobs);
   const clearJobs = useJobStore((state) => state.clearJobs);
-  const [jobss, setJobs] = useState([]);
-  const {jobs: draftJobs, addJob} = useDraftJobsStore();
-  
-  console.log("TEST", draftJobs)
+  const { jobs: draftJobs, addJob } = useDraftJobsStore();
+  const {
+    config: { menu },
+  } = usePopupStore();
+
+  console.log("TEST", draftJobs);
   useEffect(() => {
     async function checkSession() {
       const {
@@ -36,8 +40,7 @@ export default function App() {
   useEffect(() => {
     chrome?.storage?.local?.get?.([storageKey], (result) => {
       const savedJobs = result[storageKey] || [];
-      setJobs(savedJobs);
-      addJob(savedJobs)
+      addJob(savedJobs);
     });
 
     const handleChange = (
@@ -46,9 +49,7 @@ export default function App() {
     ) => {
       if (areaName === "local" && changes[storageKey]) {
         const newValue = changes[storageKey].newValue || [];
-        setJobs(newValue);
-        addJob(newValue)
-        
+        addJob(newValue);
       }
     };
 
@@ -125,9 +126,9 @@ export default function App() {
             Log Out
           </button>
           <h3 className="text-lg font-semibold mb-2">Saved Applications</h3>
-          LOLO
-          {JSON.stringify(jobss)}
-          {jobs.length > 0 ? (
+          {["linkedin", "lever"].includes(menu) ? (
+            <DraftJob/>
+          ) : jobs.length > 0 ? (
             <ul className="list-disc pl-4 space-y-1">
               {jobs.map((job) => (
                 <li key={job.id}>

@@ -18,6 +18,8 @@
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.1.5",
     "classnames": "^2.5.1",
+    "framer-motion": "^12.10.1",
+    "lucide-react": "^0.508.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.4"

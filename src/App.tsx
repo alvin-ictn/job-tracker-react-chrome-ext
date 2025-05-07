@@ -56,7 +56,7 @@ export default function App() {
     chrome?.storage?.onChanged?.addListener(handleChange);
 
     // Cleanup listener on unmount
-    return () => chrome.storage.onChanged.removeListener(handleChange);
+    return () => chrome?.storage?.onChanged?.removeListener(handleChange);
   }, [addJob]);
 
   const handleLogin = async () => {
@@ -135,7 +135,7 @@ export default function App() {
                   <strong>{job.job_title}</strong> at {job.company_name}
                   <br />
                   <a
-                    href={job.job_url}
+                    href={job.p_job_url}
                     target="_blank"
                     className="text-blue-600 underline"
                   >

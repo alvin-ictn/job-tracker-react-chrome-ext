@@ -5,7 +5,7 @@ export interface JobApplication {
   job_title: string;
   company_name: string;
   applied_date: string;
-  job_url: string;
+  p_job_url: string;
 }
 
 interface JobStore {

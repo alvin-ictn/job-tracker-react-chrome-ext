@@ -27,14 +27,14 @@ export default function extractLeverJobData() {
   const jobUrl = window.location.href.replace("/apply","");
 
   return {
-    company_name: company.trim(),
+    p_company_name: company.trim(),
     p_job_position: job_position?.trim(),
     p_department: department?.trim(),
     p_employment_type: employment_type?.trim(),
     p_location_type: location_type?.trim(),
     p_job_location: location?.trim(),
-    applied_date: new Date().toISOString(),
-    p_job_url: jobUrl,
+    p_applied_date: new Date().toISOString(),
+    p_p_job_url: jobUrl,
     p_applied_from: "lever",
     p_from_extension: true,
   };

@@ -5,7 +5,7 @@ const supabaseUrl = "https://lhgtqskqykkmpqhznjks.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3Rxc2txeWtrbXBxaHpuamtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxNzg3NzYsImV4cCI6MjA1OTc1NDc3Nn0.FjYxr8gcCzGc8e8OI8m2NOv6M7o2KXdRQHXreNQ8ad8";
 
 async function checkJobInSupabase(jobUrl: string) {
-  const res = await fetch(`${supabaseUrl}/rest/v1/job_tracker_job_applications?job_url=ilike.*${encodeURIComponent(jobUrl)}*`, {
+  const res = await fetch(`${supabaseUrl}/rest/v1/job_tracker_job_applications?p_job_url=ilike.*${encodeURIComponent(jobUrl)}*`, {
     headers: {
       apikey: supabaseAnonKey,
       Authorization: `Bearer ${supabaseAnonKey}`,
@@ -28,7 +28,7 @@ const storageKey = "job_applications";
 //   const { data, error } = await supabase
 //     .from("job_tracker_job_applications")
 //     .select("*")
-//     .ilike("job_url", `%${jobUrl}%`)
+//     .ilike("p_job_url", `%${jobUrl}%`)
 //     .single();
 
 //   if (error || !data) return null;
@@ -38,8 +38,8 @@ chrome.storage.local.get([storageKey], async(result) => {
   const existing = result[storageKey] || [];
   const currentUrl = window.location.href;
 
-  const isDraft = existing.some((job: { job_url: string }) =>
-    currentUrl.includes(job.job_url)
+  const isDraft = existing.some((job: { p_job_url: string }) =>
+    currentUrl.includes(job.p_job_url)
   );
 
   const pathnames = window.location.pathname.split('/')

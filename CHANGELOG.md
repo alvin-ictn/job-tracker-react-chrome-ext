@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/alvin-ictn/job-tracker-react-chrome-ext/compare/v1.1.0...v1.2.0) (2025-05-07)
+
+### Features
+
+* add saved jobs to popup screen ([a726737](https://github.com/alvin-ictn/job-tracker-react-chrome-ext/commit/a7267376c6c4e4e1dd8d347f8133369e4b18684e))
+* fix draft key ([02f84f5](https://github.com/alvin-ictn/job-tracker-react-chrome-ext/commit/02f84f5893d5b9045a2899f5dcc9fa552dca6254))
+
 # [1.1.0](https://github.com/alvin-ictn/job-tracker-react-chrome-ext/compare/v1.0.0...v1.1.0) (2025-05-06)
 
 

@@ -9,8 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "version": "sync-version public/manifest.json",
-    "zip": "powershell Compress-Archive -Path dist\\* -DestinationPath release/job-tracker-extension.zip",
-    "crx": "npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
+    "clean:zip": "powershell Remove-Item -Path release/job-tracker-extension.zip -ErrorAction SilentlyContinue",
+    "clean:crx": "powershell Remove-Item -Path release/job-tracker-extension.crx -ErrorAction SilentlyContinue",
+    "zip": "npm run clean:zip && powershell Compress-Archive -Path dist\\* -DestinationPath release/job-tracker-extension.zip",
+    "crx": "npm run clean:crx && npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
     "package": "npm run zip && npm run crx",
     "release": "semantic-release"
   },

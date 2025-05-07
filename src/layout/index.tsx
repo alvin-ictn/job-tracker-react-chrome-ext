@@ -8,7 +8,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <Fragment>
       <Sidebar></Sidebar>
-      <div className="pl-2">
+      <div>
         <Header></Header>
         <MainContent>{children}</MainContent>
       </div>

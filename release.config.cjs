@@ -1,5 +1,5 @@
 module.exports = {
-  branches: ["main", "master"],
+  branches: ["main", "master", { name: "develop", prerelease: true }],
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -9,30 +9,26 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "npm run build && npm run package"
-      }
+        prepareCmd: "npm run build && npm run package",
+      },
     ],
     [
       "@semantic-release/github",
       {
         assets: [
           "release/job-tracker-extension.zip",
-          "release/job-tracker-extension.crx"
-        ]
-      }
+          "release/job-tracker-extension.crx",
+        ],
+      },
     ],
     [
       "@semantic-release/git",
       {
-        assets: [
-          "package.json",
-          "manifest.json",
-          "CHANGELOG.md"
-        ],
+        assets: ["package.json", "manifest.json", "CHANGELOG.md"],
         message:
-          "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ]
+          "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+      },
+    ],
   ],
-  preset: "conventionalcommits"
+  preset: "conventionalcommits",
 };

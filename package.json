@@ -9,11 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "version": "sync-version public/manifest.json",
-    "clean:zip": "powershell Remove-Item -Path release/job-tracker-extension.zip -ErrorAction SilentlyContinue",
-    "clean:crx": "powershell Remove-Item -Path release/job-tracker-extension.crx -ErrorAction SilentlyContinue",
-    "zip": "npm run clean:zip && powershell Compress-Archive -Path dist\\* -DestinationPath release/job-tracker-extension.zip",
-    "crx": "npm run clean:crx && npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
-    "package": "npm run zip && npm run crx",
+    "clean:release": "rm -f release/job-tracker-extension.zip release/job-tracker-extension.crx || del release\\job-tracker-extension.*",
+    "zip": "zip release/job-tracker-extension.zip dist/*",
+    "crx": "npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
+    "package": "npm run clean:release && npm run zip && npm run crx",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -51,6 +50,7 @@
     "tailwindcss": "^4.1.5",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "zip-cli": "^0.0.0"
   }
 }

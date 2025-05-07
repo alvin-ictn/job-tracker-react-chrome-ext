@@ -65,7 +65,6 @@ export default function DraftJob() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-md w-full max-w-sm mx-auto"
           >
-            {/* Header */}
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -85,7 +84,6 @@ export default function DraftJob() {
               </a>
             </div>
           
-            {/* Meta Section */}
             <div className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <MapPin size={14} /> {job.p_job_location}
@@ -95,7 +93,6 @@ export default function DraftJob() {
               </div>
             </div>
           
-            {/* Tags */}
             <div className="flex justify-between mt-4 text-xs">
               <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
                 {job.p_employment_type}

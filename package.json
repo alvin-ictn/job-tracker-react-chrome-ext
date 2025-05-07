@@ -9,9 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "version": "sync-version public/manifest.json",
+    "prepare:release": "mkdir -p release || if not exist release mkdir release",
     "clean:release": "rm -f release/job-tracker-extension.zip release/job-tracker-extension.crx || del release\\job-tracker-extension.*",
-    "zip": "zip release/job-tracker-extension.zip dist/*",
-    "crx": "npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
+    "zip": "npm run prepare:release && zip release/job-tracker-extension.zip dist/*",
+    "crx": "npm run prepare:release && npx crx pack dist -o release/job-tracker-extension.crx -p my-private-key.pem",
     "package": "npm run clean:release && npm run zip && npm run crx",
     "release": "semantic-release"
   },

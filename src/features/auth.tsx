@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase-client";
 import { useJobStore } from "../store/use-job-store";
 
@@ -10,18 +10,31 @@ export function Login() {
   const fetchJobs = useJobStore((state) => state.fetchJobs);
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       alert("Login failed: " + error.message);
-    } else {
-      setUserEmail(data.user?.email || null);
-      await fetchJobs();
     }
   };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUserEmail(session?.user?.email || null);
+      if (session) fetchJobs();
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email || null);
+      if (session) fetchJobs();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [fetchJobs]);
   return (
     <>
       <input

@@ -5,36 +5,68 @@ const supabaseUrl = "https://lhgtqskqykkmpqhznjks.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3Rxc2txeWtrbXBxaHpuamtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxNzg3NzYsImV4cCI6MjA1OTc1NDc3Nn0.FjYxr8gcCzGc8e8OI8m2NOv6M7o2KXdRQHXreNQ8ad8";
 
 async function checkJobInSupabase(jobUrl: string) {
-  const res = await fetch(`${supabaseUrl}/rest/v1/job_tracker_job_applications?p_job_url=ilike.*${encodeURIComponent(jobUrl)}*`, {
-    headers: {
-      apikey: supabaseAnonKey,
-      Authorization: `Bearer ${supabaseAnonKey}`,
-      Accept: "application/json"
-    }
-  });
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/job_tracker_job_applications?p_job_url=ilike.*${encodeURIComponent(jobUrl)}*`, {
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
+        Accept: "application/json"
+      }
+    });
 
-  if (!res.ok) {
-    console.error("Supabase fetch failed", res.status);
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = await res.json();
+    return data.length > 0 ? data[0] : null;
+  } catch (e) {
     return null;
   }
-
-  const data = await res.json();
-  return data.length > 0 ? data[0] : null;
 }
+
+// Function to scrape current page based on URL
+function scrapeJobDetails() {
+  const url = window.location.href;
+  let jobData = {
+    title: "",
+    company: "",
+    location: "",
+    url: url
+  };
+
+  if (url.includes("linkedin.com/jobs")) {
+    jobData.title = document.querySelector(".job-details-jobs-unified-top-card__job-title")?.textContent?.trim() || "";
+    jobData.company = document.querySelector(".job-details-jobs-unified-top-card__company-name")?.textContent?.trim() || "";
+    jobData.location = document.querySelector(".job-details-jobs-unified-top-card__bullet")?.textContent?.trim() || "";
+  } else if (url.includes("lever.co")) {
+    // Use existing lever extractor if available or fallback
+    const leverData = extractLeverJobData();
+    jobData = {
+      title: leverData.p_job_position || document.querySelector("h2")?.textContent?.trim() || "",
+      company: leverData.p_company_name || document.title.split("-")[0].trim() || "",
+      location: leverData.p_job_location || "",
+      url: url
+    }
+  }
+
+  return jobData;
+}
+
+
+// Listen for messages from Popup
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+  if (request.action === "get_job_details") {
+    const data = scrapeJobDetails();
+    sendResponse(data);
+  }
+});
+
 
 const storageKey = "job_applications";
 
-// async function checkJobInSupabase(jobUrl: string) {
-//   const { data, error } = await supabase
-//     .from("job_tracker_job_applications")
-//     .select("*")
-//     .ilike("p_job_url", `%${jobUrl}%`)
-//     .single();
-
-//   if (error || !data) return null;
-//   return data;
-// }
-chrome.storage.local.get([storageKey], async(result) => {
+// Initial check on load
+chrome.storage.local.get([storageKey], async (result) => {
   const existing = result[storageKey] || [];
   const currentUrl = window.location.href;
 
@@ -42,43 +74,27 @@ chrome.storage.local.get([storageKey], async(result) => {
     currentUrl.includes(job.p_job_url)
   );
 
-  const pathnames = window.location.pathname.split('/')
+  // Basic normalization for Lever/Greenhouse type URLs where ID is at end
+  const pathnames = window.location.pathname.split('/');
+  if (pathnames.length >= 4 && !window.location.hostname.includes("linkedin")) {
+    // logic that was there before, keeping it safe
+    // pathnames.pop() 
+  }
 
-  if(pathnames.length === 4) pathnames.pop()
+  // Construct a clean URL for searching (naive approach for now)
+  const cleanUrl = window.location.href.split('?')[0];
 
-  const isSaved = await checkJobInSupabase(`${window.location.origin}${pathnames.join("/")}`);
+  const isSaved = await checkJobInSupabase(cleanUrl);
 
   let message = "";
 
   if (isDraft) {
-    message = "Saved\nby JobTracker";
+    message = "Saved in Draft";
   } else if (isSaved) {
-    message = "Tracked\nby JobTracker";
+    message = "Tracked";
   }
 
-  if(message) {
-      addAppliedBadge(message);
-  }
-});
-
-document.addEventListener("click", (event) => {
-  const target = event.target as HTMLElement;
-
-  if (
-    target &&
-    target.textContent?.toLowerCase().includes("submit application")
-  ) {
-    const jobData = extractLeverJobData();
-
-    chrome.storage.local.get([storageKey], (result) => {
-      const existing = result[storageKey] || [];
-      existing.push(jobData);
-      chrome.storage.local.set({ [storageKey]: existing }, () => {
-        console.log("✅ Job saved locally");
-      });
-    });
-
-    // Option 2 (if Supabase session exists → send directly)
-    // FUTURE: We'll add messaging to popup to get Supabase session
+  if (message) {
+    addAppliedBadge(message);
   }
 });

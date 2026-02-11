@@ -1,6 +1,37 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = "https://lhgtqskqykkmpqhznjks.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3Rxc2txeWtrbXBxaHpuamtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxNzg3NzYsImV4cCI6MjA1OTc1NDc3Nn0.FjYxr8gcCzGc8e8OI8m2NOv6M7o2KXdRQHXreNQ8ad8";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const ChromeStorageAdapter = {
+    getItem: (key: string) => {
+        return new Promise((resolve) => {
+            chrome.storage.local.get([key], (result) => {
+                resolve(result[key]);
+            });
+        });
+    },
+    setItem: (key: string, value: string) => {
+        return new Promise((resolve) => {
+            chrome.storage.local.set({ [key]: value }, () => {
+                resolve(null);
+            });
+        });
+    },
+    removeItem: (key: string) => {
+        return new Promise((resolve) => {
+            chrome.storage.local.remove([key], () => {
+                resolve(null);
+            });
+        });
+    },
+};
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+        storage: ChromeStorageAdapter as any,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: false,
+    },
+});
